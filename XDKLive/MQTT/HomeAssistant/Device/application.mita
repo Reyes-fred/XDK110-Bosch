@@ -1,0 +1,56 @@
+/**
+ * Welcome to XDK LIVE.
+ *
+ * Not sure what to do now?
+ * Check out the "Getting started" guide in the Eclipse help.
+ */
+
+package main;
+import platforms.xdk110;
+
+// Create a wireless connection named 'wireless'
+setup wireless : WLAN {
+	ssid = "Totalplay-4B80";
+	ipConfiguration = Dhcp();
+    authentification = Personal(psk = "pass");
+}
+
+// Create a MQTT instance
+setup messaging : MQTT {
+	transport = wireless;
+	url = "mqtt://broker.hivemq.com:1883"; // Try differents brokers iot.eclipse.org, etc. 
+	cleanSession = true;
+	clientId = "1234";  //Define your userID
+	var  button = topic("XDK/RFT/switch",1);	//Define your own topic
+	var  temperature = topic("XDK/RFT/temperature/status",1);	//Define your own topic
+	var  pressure = topic("XDK/RFT/pressure/status",1);	//Define your own topic
+	var  humidity = topic("XDK/RFT/humidity/status",1);	//Define your own topic
+}
+
+// When button one is pressed, send text via MQTT
+every button_one.pressed {
+	messaging.button.write("1"); //Define your message
+}
+
+every button_one.released {
+	messaging.button.write("0"); //Define your message
+}
+
+// Read and transmit the temperature every 5 seconds
+every 5 seconds {
+	var myTemperature = environment.temperature.read();
+	var celsusis = myTemperature / 1000;
+	messaging.temperature.write(`${celsusis}`);
+}
+
+// Read and transmit the barometric pressure every 10 seconds
+every 10 seconds {
+	var myPressure = environment.pressure.read();
+	messaging.pressure.write(`${myPressure}`);
+}
+
+// Read and transmit the barometric humidity every 15 seconds
+every 15 seconds {
+	var myhumidity = environment.humidity.read();
+	messaging.humidity.write(`${myhumidity}`);
+}
