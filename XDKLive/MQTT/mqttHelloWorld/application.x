@@ -10,8 +10,8 @@ import platforms.xdk110;
 
 // Create a wireless connection named 'wireless'
 setup wireless : WLAN {
-	ssid = "Centraal-Comunidad";
-	psk = "hoyemprendo";
+	ssid = "ssidnetwork";
+	psk = "password";
 	useDHCP = true;
 }
 
