@@ -10,9 +10,9 @@ import platforms.xdk110;
 
 // Create a wireless connection named 'wireless'
 setup wireless : WLAN {
-	ssid = "Centraal-Comunidad";
+	ssid = "ssidnetwork";
 	ipConfiguration = Dhcp();
-    authentification = Personal(psk = "hoyemprendo");
+    authentification = Personal(psk = "password");
 }
 
 // Create a MQTT instance
