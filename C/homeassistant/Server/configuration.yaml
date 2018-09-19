@@ -1,0 +1,104 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: 22.65
+  longitude: -103
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 0
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/Mexico_City
+
+  customize:
+
+  #House
+ 
+    sensor.house_temperature:
+      friendly_name: Temperature
+      icon: mdi:temperature-celsius
+    sensor.house_pressure:
+      friendly_name: Pressure
+      icon: mdi:weather-windy
+    sensor.house_humidity:
+      friendly_name: Humidity
+      icon: mdi:water
+    sensor.house_light:
+      friendly_name: Light
+      icon: mdi:lightbulb-on-outline
+    sensor.house_noise:
+      friendly_name: Noise
+      icon: mdi:volume-high
+
+    light.xdk_led:
+      friendly_name: Lamp
+      icon: mdi:lightbulb
+
+# Show links to resources in log and frontend
+#introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+http:
+  # Uncomment this to add a password (recommended!)
+  # api_password: PASSWORD
+  # Uncomment this if you are using SSL or running in Docker etc
+  # base_url: example.duckdns.org:8123
+  server_port: 8123
+
+history:
+
+mqtt:
+  broker: broker.hivemq.com
+  port: 1883
+  client_id: RBTautomation
+  keepalive: 60
+
+sensor:
+  - platform: mqtt
+    name: house temperature
+    state_topic: "XDK/RFT/temperature/status"
+    sensor_class: heat
+  - platform: mqtt
+    name: house pressure
+    state_topic: "XDK/RFT/pressure/status"
+  - platform: mqtt
+    name: house humidity
+    state_topic: "XDK/RFT/humidity/status"
+  - platform: mqtt
+    name: house light
+    state_topic: "XDK/RFT/light/status"
+  - platform: mqtt
+    name: house noise
+    state_topic: "XDK/RFT/noise/status"
+
+light:
+  - platform: mqtt
+    name: xdk led
+    state_topic: 'XDK/RFT/led/status'
+    command_topic: 'XDK/RFT/led/switch'
+    optimistic: true
+    payload_on: 1
+    payload_off: 0
+
+group:
+
+  default_view:
+    view: yes
+    entities:
+      - group.house
+
+  house:
+    name: House
+    entities:
+      - sensor.house_temperature
+      - sensor.house_pressure
+      - sensor.house_humidity
+      - sensor.house_light
+      - sensor.house_noise
+      - light.xdk_led
