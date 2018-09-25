@@ -1,2 +1,18 @@
 #Please follow this steps#
 
+WORKBENCH : 3.4.0
+
+Common Errors:
+
+Method don't exits:
+ SDK/xdk110/Libraries/FreeRTOS/mqtt/aws_mqtt_agent.c
+   *xQueueCreateStatic
+   *xTaskCreateStatic
+  
+   Solution:
+      Go to FreeRTOS Line 813
+      #ifndef configSUPPORT_STATIC_ALLOCATION
+      /*Defaults to 0 for backward compatibility */
+       #define
+        configSUPPORT_STATIC_ALLOCATION 1
+       #endif
