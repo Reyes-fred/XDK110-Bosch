@@ -4,7 +4,7 @@ WORKBENCH : 3.4.0
 
 Common Errors:
 
-Method don't exits:
+1. Method don't exits:
  SDK/xdk110/Libraries/FreeRTOS/mqtt/aws_mqtt_agent.c
    *xQueueCreateStatic
    *xTaskCreateStatic
@@ -16,3 +16,25 @@ Method don't exits:
        #define
         configSUPPORT_STATIC_ALLOCATION 1
        #endif
+       
+2. Tcp_connectSecure, Tls_getSocketStatus, Tls_receive, Tls_prepareForSending, Tls_send, Tls_retrySendingLater, Tls_close, Tls_delete
+     Go to Serval_Defines.h Line 214
+      #ifndef SERVAL_ENABLE_TLS_SERVER
+      /**
+      *Enable SERVAL_ENABLE_TLS_SERVER in order to enable
+      *the Tranport Layer Security (TLS) code/Feature 
+      */
+      #define SERVAL_ENABLE_TLS_SERVER 1
+      #endif
+      
+Enhancement:
+   SDK/XDK110/Libraries/ServalStack/src/Msg/tcpmsg.c
+    Line 90
+     Old: 
+      assert(Tcp_isValidSokcet(conn))
+      
+     New:
+       if(Tcp_isValidSocket(conn)){}
+       else{
+        return TCP_RECEIVE_ERROR;
+       }
