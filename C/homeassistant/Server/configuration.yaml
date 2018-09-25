@@ -81,7 +81,7 @@ light:
   - platform: mqtt
     name: xdk led
     state_topic: 'XDK/RFT/led/status'
-    command_topic: 'XDK/RFT/led/switch'
+    command_topic: 'XDK/RFT/led/status'
     optimistic: true
     payload_on: 1
     payload_off: 0
