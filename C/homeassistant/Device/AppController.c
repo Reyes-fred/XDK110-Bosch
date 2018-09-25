@@ -367,9 +367,9 @@ static void AppControllerFire(void* pvParameters)
 
     const char *publishHumidity    = "%ld";
     const char *publishPressure    = "%ld";
-    const char *publishTemperature = "%f\xf8";
+    const char *publishTemperature = "%f";
     const char *publishLigth	   = "%ld";
-    const char *publishSound	   = "%f\xf8";
+    const char *publishSound	   = "%f";
 
     memset(&sensorValue, 0x00, sizeof(sensorValue));
 #if APP_MQTT_SECURE_ENABLE
