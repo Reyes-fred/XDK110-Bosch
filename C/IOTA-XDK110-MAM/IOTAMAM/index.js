@@ -52,7 +52,7 @@ function start(){
 			'pressure' :    jsonData.Pressure,
 			'temperature' : jsonData.Temperature,
 			'light' : jsonData.Light,
-			'noise' : jsonData.Noise*,};
+			'noise' : jsonData.Noise,};
 	switch(process.argv[3]){								//Getting the mode of the stream (Public:1, Private:2, Restricted: 3)
 		case '1': MAM_public.attach(message);break;
 		case '2': MAM_private.attach(message);break;
