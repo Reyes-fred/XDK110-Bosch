@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+
+      <meta charset="UTF-8">
+      <link rel="stylesheet" href="./includes/style/bootstrap.min.css">
+      <link rel="stylesheet" href="./includes/style/main.css">
+
+      <title>SensorHub v0.0.1</title>
+    </head>
+    <body>
+
+      <div class="header">
+
+        <div style="position: absolute; top: 0; left: 0; width: 210px;">
+          <img src="./includes/media/logo_bold.png" width="180px" style="display: block; margin: auto; padding-top: 6px;"/>
+        </div>
+
+
+        <input id="stream_add" type="text" class="form-control" placeholder="Paste your root here:" autofocus>
+
+        <div style="position: absolute; top: 15px; right: 10px;">
+          IRI: <span class="label label-primary" id="iriVersion">...</span>&nbsp
+          Sync: <span class="label label-primary" id="syncState">...</span>
+        </div>
+      </div>
+
+        <div id="stream_feed">
+          <div id="ghost" style="height: 30px;"></div>
+        </div>
+
+
+        <div id="map"></div>
+
+
+        <div id="stream_data">
+	  <div style="position: relative; width: 100%; padding: 5px; text-align: center; margin-top: 10px; "><h4 id="title">Select a device.</h4><div>
+          <div style="position: relative; width: 100%; padding: 5px; text-align: center;"><h6 id="loc"></h6></div>
+
+          <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-6" style="text-align: center;"><h4>Temperature:</h4><h5 id="temp"></h5></div>
+            <div class="col-xs-6" id="temp_ctx"></div>
+          </div>
+          <hr>
+          <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-6" style="text-align: center;"><h4>Pressure:</h4><h5 id="press"></h5></div>
+            <div class="col-xs-6" id="press_ctx"></div>
+          </div>
+          <hr>
+          <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-6" style="text-align: center;"><h4>Humidity:</h4><h5 id="hum"></h5></div>
+            <div class="col-xs-6" id="hum_ctx"></div>
+          </div>
+          <hr>
+          <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-6" style="text-align: center;"><h4>Luminosity:</h4><h5 id="lig"></h5></div>
+            <div class="col-xs-6" id="lig_ctx"></div>
+          </div>
+          <hr>
+          <div class="row" style="margin-top: 20px;">
+            <div class="col-xs-6" style="text-align: center;"><h4>Noise:</h4><h5 id="noi"></h5></div>
+            <div class="col-xs-6" id="noi_ctx"></div>
+          </div>
+          <hr>
+
+
+          <div id="stream_data_control">
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#history">Show history</button>
+            <button id="stream_delete" type="button" class="btn btn-danger">Delete</button>
+          </div>
+
+        </div>
+
+      <!-- Modal -->
+       <div class="modal fade" id="history" role="dialog">
+         <div class="modal-dialog modal-md">
+           <div class="modal-content">
+             <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal">&times;</button>
+               <h4 class="modal-title" id="history_title"></h4>
+             </div>
+             <div class="modal-body">
+               <div id="history_table" style="color: #191f2d"></div>
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+             </div>
+           </div>
+         </div>
+       </div>
+      </div>
+
+
+        <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+        <script src="./includes/js/jquery-3.2.1.min.js"></script>
+        <script src="./includes/js/bootstrap.min.js"></script>
+        <script src="./includes/js/Chart.min.js"></script>
+        <script src="./scripts/index.js"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5jCj94AqW-ktmNWsYe0tNgj0Q4MX4xcM&callback=init"></script>
+        <script>if (window.module) module = window.module;</script>
+
+    </body>
+  </html>

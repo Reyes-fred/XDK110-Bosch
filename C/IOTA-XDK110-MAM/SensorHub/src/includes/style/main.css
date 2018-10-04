@@ -1,0 +1,126 @@
+  html, body {
+    height: 100%;
+    width: 100%;
+
+    background: #181926;
+    color: #bec6d7;
+
+    overflow: hidden;
+  }
+
+  input[type="text"],
+  select.form-control {
+    height: 30px;
+    margin:auto;
+    margin-left: 200px;
+    float: left;
+    width: calc(100% - 360px);
+
+    color: #86899e;
+    border: none;
+    background: #32354d;
+  }
+
+  .header {
+    height: 50px;
+    width: 100%;
+    padding: 8px;
+    border-bottom: 4px solid #428bca;
+
+    border-top-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-image: linear-gradient(to right, #e600ff, #00c8ff) 1 stretch;
+
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: bolder;
+    margin-bottom: 0px;
+  }
+
+  h1 {
+    font-weight: 200;
+  }
+
+  hr {
+    margin:0;
+    background: none !important;
+    border-top: 1px solid #d9d5d5;
+  }
+
+  .label-white {
+    color: #2c3344;
+    background: #bec6d7;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  #map {
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    height: calc(100% - 50px);
+    width: 100%;
+  }
+
+  #stream_data {
+    position: absolute;
+    padding:10px;
+    top: 80px;
+    height: auto;
+    right: 30px;
+    width: 280px;
+    border: 1px solid #8c8c8c;
+    border-radius: 5px;
+    background: #fcfcfc;
+    color: #191f2d;
+  }
+
+  #stream_data_control {
+    position: relative;
+    width: 100%;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  #stream_feed {
+    position: absolute;
+    z-index: 10;
+    left: 30px;
+    top: 50px;
+    width: 170px;
+    height: calc(100% - 50px);
+    overflow: auto;
+    overflow-x: hidden;
+  }
+
+  .stream_label {
+    position: relative;
+    height: 40px;
+    max-width: 130px;
+    padding: 3px;
+    margin-bottom: 7px;
+    text-align: center;
+    border: 1px solid #2c2f47;
+    border-radius: 5px;
+    color: #e3e3e3;
+    background: #35374f;
+  }
+
+  .stream_label:hover {
+    color: #fff;
+    background: #2e3041;
+  }
+
+  .stream_label.active {
+    color: #fff;
+    background: #428bca;
+  }
+
+  .highlight {
+    background: #00c8ff;
+  }

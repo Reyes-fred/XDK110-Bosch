@@ -1,0 +1,23 @@
+{
+  "name": "boschxdkmqttiotamam",
+  "version": "0.0.1",
+  "description": "An example of fetching JSON from MQTT and sending data with MAM to tangle",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "IOTA",
+    "Tangle",
+    "MAM",
+    "MQTT",
+    "Bosch",
+    "JSON"
+  ],
+  "author": "@chrislaive, @antonionardella",
+  "license": "MIT",
+  "dependencies": {
+    "iota.lib.js": "^0.4.7",
+    "mqtt": "^2.18.1"
+  }
+}
