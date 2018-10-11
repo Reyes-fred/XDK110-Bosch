@@ -88,7 +88,7 @@ ipcRenderer.on('fetchPacket', (event, _packet, id) => {
   let d4 = {'light': _packet.light}
   streams[id].addData(d4, _packet.timestamp);
   let d5 = {'noise': _packet.noise}
-  streams[id].addData(d4, _packet.timestamp);
+  streams[id].addData(d5, _packet.timestamp);
 
   if (selected != null && selected == id) {
     select(id);
