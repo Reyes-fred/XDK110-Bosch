@@ -30,8 +30,4 @@ Run with ``` npm start ```
 
 Run [SensorNode](https://github.com/rckey/SensorNode) to generate own streams.
 
-## You want to donate?
 
-IOTA: OZPVZDEHSIOJXVVPYKKR9DQVGKXOLIAAMDAEREMQLDYMVOAGBAKC9CMKBRZAAWLMYQCNCPEIPYQBZMUSDODQVGPLDW
-
-<img src="https://cdn.tngl.me/rck/donation/qr.svg" alt="donation@rck" />
