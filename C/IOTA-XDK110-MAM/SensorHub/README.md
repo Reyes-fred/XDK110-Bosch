@@ -18,11 +18,7 @@ Install node_modules:
 cd SensorHub/
 npm install
 ```
-Install mam.node.js:
-```
-cd node_modules/
-git clone https://github.com/rckey/mam.node.js
-```
+
 ## Running.
 
 Run with ``` npm start ```
