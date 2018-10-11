@@ -1,12 +1,11 @@
+#Original Project
+https://github.com/rckey/SensorHub/
+
 # SensorHub
-[MaM](https://blog.iota.org/introducing-masked-authenticated-messaging-e55c1822d50e)-based sensor-monitoring for the internet of things.
+MaM-based sensor-monitoring for the internet of things.
 
-<img src="https://i.imgur.com/eMwPcI3.png"/>
+<img src="https://image-store.slidesharecdn.com/5e62645f-9163-4627-a717-b7d6133cb986-original.jpeg"/>
 
-### Disclaimer:
-
-This is a barely tested, barely commented, poc-prototype-piece-of-software yet. Use at own risk!
-Feel free to contact me for any kind of suggestions though.
 
 ### Installation:
 
@@ -28,6 +27,6 @@ git clone https://github.com/rckey/mam.node.js
 
 Run with ``` npm start ```
 
-Run [SensorNode](https://github.com/rckey/SensorNode) to generate own streams.
+
 
 
