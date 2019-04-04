@@ -1,0 +1,121 @@
+/**
+ * Welcome to Eclipse Mita.
+ *
+ * Not sure what to do now?
+ * Check out the "Getting started" guide on https://mita.io.
+ */
+
+package main;
+import platforms.xdk110;
+
+
+var banlux: int32;
+var ban: int32;
+
+every XDK110.startup {
+	ban = 0;
+	banlux = 0;
+}
+
+// Create a wireless connection named 'wireless'
+setup wireless : WLAN {
+	ssid = "Totalplay-***";
+	ipConfiguration = Dhcp();
+    authentication = Personal(psk = "password");
+}
+
+setup roku : HttpRestClient {
+    transport = wireless;
+    endpointBase = "http://192.168.100.35:8060";
+    var up = resource('/keypress/Up');
+    var down = resource('/keypress/Down');
+    var left = resource('/keypress/Left');
+    var right = resource('/keypress/Right');
+    var volumeUp = resource('/keypress/VolumeUp');//Button1
+    var volumeDown = resource('/keypress/VolumeDown');//Button2
+    var volumeMute = resource('/keypress/VolumeMute');//Shake
+    var enter = resource('/keypress/Enter');//Tap
+    var poweroff = resource('/keypress/PowerOff');//Luz
+}
+
+every button_one.pressed {
+	 roku.volumeUp.write('');
+	 println('volumeUp');
+}
+
+every button_two.pressed {
+	 roku.volumeDown.write('');
+	 println('volumeDown');
+}
+
+
+setup Gyroscope_BMG160 {
+  range = Range_250s;
+  bandwidth = Bw_12Hz;
+}
+setup Gyroscope_BMI160 {
+  range = Range_250s;
+  bandwidth = BW_10_7Hz;
+}
+
+setup accelerometer{
+	
+	
+}
+
+every accelerometer.single_tap{
+	roku.volumeMute.write('');
+	println('Mute');
+}
+
+/*every accelerometer.double_tap{
+	roku.enter.write('');
+}*/
+ 
+
+every 100 milliseconds {
+      var x = gyroscope.x_axis.read();
+      var y = gyroscope.y_axis.read();
+ 
+ 	if(light.intensity.read() < 100 && banlux!=1){
+	 	roku.poweroff.write('');
+	 	println('Off');
+	 	banlux=1;
+	 	
+	 }
+	 
+      if(x>200 && ban!=1){ //X
+        println('right');
+        ban=1;
+	 	roku.right.write('');
+	 	
+	 }
+	 if(x<-200 && ban!=1){
+	 	println('left');
+	 	ban=1;
+	 	roku.left.write('');
+	 		
+	 }
+	 if(y>200 && ban!=1){//Y
+	 	println('forward');
+	 	ban=1;
+	 	roku.up.write('');
+	 	
+	 }
+	 if(y<-200 && ban!=1){
+	 	println('back');
+	 	ban=1;
+	 	roku.down.write('');
+	 		
+	 }	 
+	 
+  }
+  every 10 seconds{
+  	banlux=0;
+  	
+}
+
+  every 5 seconds{
+  	ban=0;
+  	
+}
