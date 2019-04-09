@@ -15,104 +15,106 @@ var ban: int32;
 
 //First we need to initialize our variables.
 every XDK110.startup {
-ban = 0;
-banlux = 0;
+	ban = 0;
+	banlux = 0;
 }
 
 // Create a wireless connection named 'wireless', set up you password and ssid
 setup wireless : WLAN {
-ssid = "Totalplay-***";
-ipConfiguration = Dhcp();
-authentication = Personal(psk = "password");
+	ssid = "Totalplay-***";
+	ipConfiguration = Dhcp();
+	authentication = Personal(psk = "password");
 }
 
 // Get the ip direcction from you tv, read ROKU API, to get all the roku devices
 // Define the Rest Method that you want to use.
 setup roku : HttpRestClient {
-transport = wireless;
-endpointBase = "http://192.168.100.35:8060";
-var up = resource('/keypress/Up');
-var down = resource('/keypress/Down');
-var left = resource('/keypress/Left');
-var right = resource('/keypress/Right');
-var volumeUp = resource('/keypress/VolumeUp');//Button1
-var volumeDown = resource('/keypress/VolumeDown');//Button2
-var volumeMute = resource('/keypress/VolumeMute');//Shake
-var enter = resource('/keypress/Enter');//Tap
-var poweroff = resource('/keypress/PowerOff');//Light
+	transport = wireless;
+	endpointBase = "http://192.168.100.35:8060";
+	var up = resource('/keypress/Up');
+	var down = resource('/keypress/Down');
+	var left = resource('/keypress/Left');
+	var right = resource('/keypress/Right');
+	var volumeUp = resource('/keypress/VolumeUp');//Button1
+	var volumeDown = resource('/keypress/VolumeDown');//Button2
+	var volumeMute = resource('/keypress/VolumeMute');//Shake
+	var enter = resource('/keypress/Enter');//Tap
+	var poweroff = resource('/keypress/PowerOff');//Light
 }
 
 // Define the triggers
 // Button 1 - allow us to volumeUp
 every button_one.pressed {
-roku.volumeUp.write('');
-println('volumeUp');
+	roku.volumeUp.write('');
+	println('volumeUp');
 }
 
 // Button 1 - allow us to volumenDown
 every button_two.pressed {
-roku.volumeDown.write('');
-println('volumeDown');
+	roku.volumeDown.write('');
+	println('volumeDown');
 }
 
 // We need to initialize the Gyroscope to read real data form this sensor.
 setup Gyroscope_BMG160 {
-range = Range_250s;
-bandwidth = Bw_12Hz;
+	range = Range_250s;
+	bandwidth = Bw_12Hz;
 }
 setup Gyroscope_BMI160 {
-range = Range_250s;
-bandwidth = BW_10_7Hz;
+	range = Range_250s;
+	bandwidth = BW_10_7Hz;
 }
 
 setup accelerometer{
 }
-//A single tap on the XDK allow us to Mute the TV
-every accelerometer.single_tap{
-roku.volumeMute.write('');
-println('Mute');
+	//A single tap on the XDK allow us to Mute the TV
+	every accelerometer.single_tap{
+	roku.volumeMute.write('');
+	println('Mute');
 }
 
 //Problem XDK Logic
 /*every accelerometer.double_tap{
-roku.enter.write('');
+	roku.enter.write('');
 }*/
+
 // Every 100 milliseconds we need to verify the state of the sensor to determine when a clause was succesful accomplish
 every 100 milliseconds {
-var x = gyroscope.x_axis.read();
-var y = gyroscope.y_axis.read();
-if(light.intensity.read() < 100 && banlux!=1){
-roku.poweroff.write('');
-println('Off');
-banlux=1;
-}
-if(x>200 && ban!=1){ //X
-println('right');
-ban=1;
-roku.right.write('');
-}
-if(x<-200 && ban!=1){
-println('left');
-ban=1;
-roku.left.write('');
-}
-if(y>200 && ban!=1){//Y
-println('forward');
-ban=1;
-roku.up.write('');
-}
-if(y<-200 && ban!=1){
-println('back');
-ban=1;
-roku.down.write('');
-}
+	var x = gyroscope.x_axis.read();
+	var y = gyroscope.y_axis.read();
+	if(light.intensity.read() < 100 && banlux!=1){
+		roku.poweroff.write('');
+		println('Off');
+		banlux=1;
+	}
+	if(x>200 && ban!=1){ //X
+		println('right');
+		ban=1;
+		roku.right.write('');
+	}
+	if(x<-200 && ban!=1){
+		println('left');
+		ban=1;
+		roku.left.write('');
+	}
+	if(y>200 && ban!=1){//Y
+		println('forward');
+		ban=1;
+		roku.up.write('');
+	}
+	if(y<-200 && ban!=1){
+		println('back');
+		ban=1;
+		roku.down.write('');
+	}
 }
 //every 10 an 5 we clear the variable used as flags
 every 10 seconds{
-banlux=0;
+	banlux=0;
 }
 
 every 5 seconds{
-ban=0;
+	ban=0;
 }
 
+				
