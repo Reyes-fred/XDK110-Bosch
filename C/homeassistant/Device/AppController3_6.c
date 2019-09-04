@@ -185,9 +185,17 @@ static MQTT_Subscribe_T MqttSubscribeInfo =
                 .IncomingPublishNotificationCB = AppMQTTSubscribeCB,
         };/**< MQTT subscribe parameters */
 
+static MQTT_Publish_T MqttPublishTemperature =
+        {
+                .Topic = APP_MQTT_Temperature,
+                .QoS = 1UL,
+                .Payload = NULL,
+                .PayloadLength = 0UL,
+        };/**< MQTT publish parameters */
+
 static MQTT_Publish_T MqttPublishHumidity =
         {
-                .Topic = MQTT_TOPIC_HUMIDITY,
+                .Topic = APP_MQTT_Humidity,
                 .QoS = 1UL,
                 .Payload = NULL,
                 .PayloadLength = 0UL,
@@ -195,23 +203,7 @@ static MQTT_Publish_T MqttPublishHumidity =
 
 static MQTT_Publish_T MqttPublishPressure =
         {
-                .Topic = MQTT_TOPIC_PRESSURE,
-                .QoS = 1UL,
-                .Payload = NULL,
-                .PayloadLength = 0UL,
-        };/**< MQTT publish parameters */
-
-static MQTT_Publish_T MqttPublishTemperature =
-        {
-                .Topic = MQTT_TOPIC_TEMPERATURE,
-                .QoS = 1UL,
-                .Payload = NULL,
-                .PayloadLength = 0UL,
-        };/**< MQTT publish parameters */
-
-static MQTT_Publish_T MqttPublishLight =
-        {
-                .Topic = MQTT_TOPIC_LIGHT,
+                .Topic = APP_MQTT_Pressure,
                 .QoS = 1UL,
                 .Payload = NULL,
                 .PayloadLength = 0UL,
@@ -219,11 +211,19 @@ static MQTT_Publish_T MqttPublishLight =
 
 static MQTT_Publish_T MqttPublishNoise =
         {
-                .Topic = MQTT_TOPIC_NOISE,
+                .Topic = APP_MQTT_Noise,
                 .QoS = 1UL,
                 .Payload = NULL,
                 .PayloadLength = 0UL,
-};/**< MQTT publish parameters */
+        };/**< MQTT publish parameters */
+
+static MQTT_Publish_T MqttPublishLight =
+        {
+                .Topic = APP_MQTT_Light,
+                .QoS = 1UL,
+                .Payload = NULL,
+                .PayloadLength = 0UL,
+        };/**< MQTT publish parameters */
 
 static uint32_t AppIncomingMsgCount = 0UL;/**< Incoming message count */
 
@@ -341,20 +341,18 @@ static void AppControllerFire(void* pvParameters)
     BCDS_UNUSED(pvParameters);
 
     Retcode_T retcode = RETCODE_OK;
-       Sensor_Value_T sensorValue;
-       char publishBufferH[APP_MQTT_DATA_BUFFER_SIZE];
-       char publishBufferP[APP_MQTT_DATA_BUFFER_SIZE];
-       char publishBufferT[APP_MQTT_DATA_BUFFER_SIZE];
-       char publishBufferL[APP_MQTT_DATA_BUFFER_SIZE];
-       char publishBufferN[APP_MQTT_DATA_BUFFER_SIZE];
+    Sensor_Value_T sensorValue;
+    char publishBufferT[APP_MQTT_DATA_BUFFER_SIZE];
+    char publishBufferP[APP_MQTT_DATA_BUFFER_SIZE];
+    char publishBufferH[APP_MQTT_DATA_BUFFER_SIZE];
+    char publishBufferL[APP_MQTT_DATA_BUFFER_SIZE];
+    char publishBufferN[APP_MQTT_DATA_BUFFER_SIZE];
 
-
-       const char *publishHumidity    = "%ld";
-       const char *publishPressure    = "%ld";
-       const char *publishTemperature = "%f";
-       const char *publishLigth	   = "%ld";
-       const char *publishSound	   = "%f";
-
+    const char *publishDataFormatT = "%f\xf8\n";
+    const char *publishDataFormatP = "%ld\n";
+    const char *publishDataFormatH = "%ld\n";
+    const char *publishDataFormatL = "%ld\n";
+    const char *publishDataFormatN = "%ld\n";
 
     memset(&sensorValue, 0x00, sizeof(sensorValue));
 #if APP_MQTT_SECURE_ENABLE
@@ -415,48 +413,42 @@ static void AppControllerFire(void* pvParameters)
         }
         if (RETCODE_OK == retcode)
         {
-        	int32_t lengthH = snprintf((char *) publishBufferH, APP_MQTT_DATA_BUFFER_SIZE, publishHumidity,
-        	                    (long int) sensorValue.RH);
+            int32_t lengthT = snprintf((char *) publishBufferT, APP_MQTT_DATA_BUFFER_SIZE, publishDataFormatT,
+                               (sensorValue.Temp /= 1000));
+            int32_t lengthP = snprintf((char *) publishBufferP, APP_MQTT_DATA_BUFFER_SIZE, publishDataFormatP,
+                               (long int) sensorValue.Pressure);
+            int32_t lengthH = snprintf((char *) publishBufferH, APP_MQTT_DATA_BUFFER_SIZE, publishDataFormatH,
+                               (long int) sensorValue.RH);
+            int32_t lengthN = snprintf((char *) publishBufferN, APP_MQTT_DATA_BUFFER_SIZE, publishDataFormatN,
+                               (long int) sensorValue.Noise);
+            int32_t lengthL = snprintf((char *) publishBufferL, APP_MQTT_DATA_BUFFER_SIZE, publishDataFormatL,
+                               (long int) sensorValue.Light);
 
-        	            int32_t lengthP = snprintf((char *) publishBufferP, APP_MQTT_DATA_BUFFER_SIZE, publishPressure,
-        	                                (long int) sensorValue.Pressure);
+            MqttPublishTemperature.Payload = publishBufferT;
+            MqttPublishTemperature.PayloadLength = lengthT;
+            retcode = MQTT_PublishToTopic(&MqttPublishTemperature, MQTT_PUBLISH_TIMEOUT_IN_MS);
 
-        	            int32_t lengthT = snprintf((char *) publishBufferT, APP_MQTT_DATA_BUFFER_SIZE, publishTemperature,
-        	                                (sensorValue.Temp /= 1000));
-
-        	            int32_t lengthL = snprintf((char *) publishBufferL, APP_MQTT_DATA_BUFFER_SIZE, publishLigth,
-        	                                (long int) sensorValue.Light);
-
-        	            int32_t lengthN = snprintf((char *) publishBufferN, APP_MQTT_DATA_BUFFER_SIZE, publishSound,
-        	                                sensorValue.Noise);
-
-        	            //Send Humidity
-        	            MqttPublishHumidity.Payload = publishBufferH;
-        	            MqttPublishHumidity.PayloadLength = lengthH;
-        	            retcode = MQTT_PublishToTopic(&MqttPublishHumidity, MQTT_PUBLISH_TIMEOUT_IN_MS);
-
-        	            //Publish Pressure
-        	            MqttPublishPressure.Payload = publishBufferP;
-        	            MqttPublishPressure.PayloadLength = lengthP;
-        	            retcode = MQTT_PublishToTopic(&MqttPublishPressure, MQTT_PUBLISH_TIMEOUT_IN_MS);
-
-        	            //Publish Temperature
-        	            MqttPublishTemperature.Payload = publishBufferT;
-        	            MqttPublishTemperature.PayloadLength = lengthT;
-        	            retcode = MQTT_PublishToTopic(&MqttPublishTemperature, MQTT_PUBLISH_TIMEOUT_IN_MS);
-
-        	            //Publish Light
-        	            MqttPublishLight.Payload = publishBufferL;
-        	            MqttPublishLight.PayloadLength = lengthL;
-        	            retcode = MQTT_PublishToTopic(&MqttPublishLight, MQTT_PUBLISH_TIMEOUT_IN_MS);
-
-        	            //Publish Light
-        	            MqttPublishNoise.Payload = publishBufferN;
-        	            MqttPublishNoise.PayloadLength = lengthN;
-        	retcode = MQTT_PublishToTopic(&MqttPublishNoise, MQTT_PUBLISH_TIMEOUT_IN_MS);
-
-            if (RETCODE_OK != retcode)
-            {
+            if (RETCODE_OK != retcode){
+				MqttPublishPressure.Payload = publishBufferP;
+				MqttPublishPressure.PayloadLength = lengthP;
+				retcode = MQTT_PublishToTopic(&MqttPublishPressure, MQTT_PUBLISH_TIMEOUT_IN_MS);
+            }
+            if (RETCODE_OK != retcode){
+				MqttPublishHumidity.Payload = publishBufferH;
+				MqttPublishHumidity.PayloadLength = lengthH;
+				retcode = MQTT_PublishToTopic(&MqttPublishHumidity, MQTT_PUBLISH_TIMEOUT_IN_MS);
+            }
+            if (RETCODE_OK != retcode){
+				MqttPublishLight.Payload = publishBufferL;
+				MqttPublishLight.PayloadLength = lengthL;
+				retcode = MQTT_PublishToTopic(&MqttPublishLight, MQTT_PUBLISH_TIMEOUT_IN_MS);
+            }
+			if (RETCODE_OK != retcode){
+				MqttPublishNoise.Payload = publishBufferN;
+				MqttPublishNoise.PayloadLength = lengthN;
+				retcode = MQTT_PublishToTopic(&MqttPublishNoise, MQTT_PUBLISH_TIMEOUT_IN_MS);
+			}
+            if (RETCODE_OK != retcode){
                 printf("AppControllerFire : MQTT publish failed \n\r");
             }
         }
