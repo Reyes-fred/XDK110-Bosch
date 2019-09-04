@@ -1,5 +1,5 @@
 /*
-* Licensee agrees that the example code provided to Licensee has been developed and released by Bosch solely as an example to be used as a potential reference for Licensee�s application development. 
+* Licensee agrees that the example code provided to Licensee has been developed and released by Bosch solely as an example to be used as a potential reference for Licensee�s application development.
 * Fitness and suitability of the example code for any use within Licensee�s applications need to be verified by Licensee on its own authority by taking appropriate state of the art actions and measures (e.g. by means of quality assurance measures).
 * Licensee shall be responsible for conducting the development of its applications as well as integration of parts of the example code into such applications, taking into account the state of the art of technology and any statutory regulations and provisions applicable for such applications. Compliance with the functional system requirements and testing there of (including validation of information/data security aspects and functional safety) and release shall be solely incumbent upon Licensee. 
 * For the avoidance of doubt, Licensee shall be responsible and fully liable for the applications and any distribution of such applications into the market.
@@ -64,6 +64,7 @@
 #include <stdio.h>
 
 /* additional interface header files */
+#include "XDK_LED.h"
 #include "BCDS_BSP_Board.h"
 #include "BCDS_CmdProcessor.h"
 #include "BCDS_NetworkConfig.h"
@@ -75,7 +76,7 @@
 #include "XDK_ServalPAL.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "XDK_LED.h"
+
 
 /* constant definitions ***************************************************** */
 
@@ -261,6 +262,7 @@ static xTaskHandle AppControllerHandle = NULL;/**< OS thread handle for Applicat
 
 static void AppMQTTSubscribeCB(MQTT_SubscribeCBParam_T param)
 {
+	Retcode_T retcode = RETCODE_OK;
     AppIncomingMsgCount++;
     memset(AppIncomingMsgTopicBuffer, 0, sizeof(AppIncomingMsgTopicBuffer));
     memset(AppIncomingMsgPayloadBuffer, 0, sizeof(AppIncomingMsgPayloadBuffer));
@@ -288,13 +290,25 @@ static void AppMQTTSubscribeCB(MQTT_SubscribeCBParam_T param)
             AppIncomingMsgTopicBuffer, AppIncomingMsgPayloadBuffer);
 
     if (strcmp(AppIncomingMsgPayloadBuffer, "1") == 0) {
-    	LED_On(LED_INBUILT_RED);
-    	LED_On(LED_INBUILT_ORANGE);
-    	LED_On(LED_INBUILT_YELLOW);
+    	retcode = LED_On(LED_INBUILT_RED);
+    	if (RETCODE_OK == retcode)
+    	{
+    	  retcode = LED_On(LED_INBUILT_ORANGE);
+    	}
+    	if (RETCODE_OK == retcode)
+    	{
+    	   retcode = LED_On(LED_INBUILT_YELLOW);
+    	}
     }else if(strcmp(AppIncomingMsgPayloadBuffer, "0") == 0){
-    	LED_Off(LED_INBUILT_RED);
-    	LED_Off(LED_INBUILT_ORANGE);
-    	LED_Off(LED_INBUILT_YELLOW);
+    	retcode = LED_Off(LED_INBUILT_RED);
+    	if (RETCODE_OK == retcode)
+    	{
+    	    retcode = LED_Off(LED_INBUILT_ORANGE);
+    	}
+    	if (RETCODE_OK == retcode)
+    	{
+    	    retcode = LED_Off(LED_INBUILT_YELLOW);
+    	}
     }
 
 }
@@ -486,8 +500,12 @@ static void AppControllerEnable(void * param1, uint32_t param2)
 {
     BCDS_UNUSED(param1);
     BCDS_UNUSED(param2);
-
-    Retcode_T retcode = WLAN_Enable();
+    Retcode_T retcode = RETCODE_OK;
+    retcode = LED_Enable();
+    if (RETCODE_OK == retcode)
+    {
+        retcode = WLAN_Enable();
+    }
     if (RETCODE_OK == retcode)
     {
         retcode = ServalPAL_Enable();
